@@ -3,8 +3,10 @@ home: true
 heroImage: /logo.jpeg
 heroText: Steins Gate的前端记录
 tagline: 一点一滴都是进步
-actionText: 马上进入 →
-actionLink: /pages/folder1/test1.md
+actions:
+  - text: 马上进入 →
+    link: /promise/promise.md
+    type: primary 
 features:
 - title: 学习记录
   details: 平时学习技术的总结和记录。

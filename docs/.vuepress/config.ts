@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-06-29 15:51:52
  * @LastEditors: xinxu
- * @LastEditTime: 2022-06-29 20:14:24
+ * @LastEditTime: 2022-07-04 14:19:39
  * @FilePath: /Blog/docs/.vuepress/config.ts
  */
 import { defineUserConfig } from "vuepress";
@@ -16,8 +16,8 @@ export default defineUserConfig({
   theme: defaultTheme({
     navbar: [
       {
-        text: "commjs",
-        link: "/Node/commonJs.md",
+        text: "commonJs",
+        link: "/node/commonJs.md",
       },
     ],
     sidebar: [
@@ -26,6 +26,12 @@ export default defineUserConfig({
       },
       {
         text: "Promise",
+        children: [
+          {
+            text: "promise原理",
+            link: "/promise/promise.md",
+          }
+        ]
       },
       {
         text: "Vue",
@@ -41,7 +47,7 @@ export default defineUserConfig({
         children: [
           {
             text: "commonJS规范",
-            link: "/Node/commonJs.md",
+            link: "/node/commonJs.md",
           },
         ],
       },
