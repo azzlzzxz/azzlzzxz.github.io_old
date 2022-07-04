@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-07-01 17:36:28
  * @LastEditors: xinxu
- * @LastEditTime: 2022-07-04 16:04:37
+ * @LastEditTime: 2022-07-04 17:27:54
  * @FilePath: /Blog/docs/promise/Promise.md
 -->
 
@@ -149,4 +149,20 @@ class Promise {
     }
   }
 }
+```
+### promise链式调用
+* 如果then方法中（成功或失败），返回的不是一个promise，那么会将then的返回值出递给外层下一个then的成功的结果。
+* 如果then方法出错、抛出异常，则会走外层下一个then方法的失败。
+* 如果then返回的是个promise，则会用promise的成功或失败，来走外层then的成功或失败。
+* 什么时候会当前的then走完会走下一个then的失败：
+  * then出错就失败。
+  * 返回的promise出错或失败，就走下个then的失败，其他一律走下个then的成功。
+* then方法为什么能够链式调用：
+  * 因为每次调用then方法都会返回一个新的promise，才能保证状态一直改变（当上层的promise失败时，之后会走then方法的失败onRejected，返回新的promise会走下个then的成功onFulfilled）
+  * catch就是then方法的别名，没有成功只有失败（找最近的优先处理，处理不了就向下找），也就是说promise失败，会先走then的onRejected方法返回失败的值，如果找不到，就会走catch。
+
+> Promise链式调用原理一：then同步状态，返回的不是promise
+```js
+
+
 ```
