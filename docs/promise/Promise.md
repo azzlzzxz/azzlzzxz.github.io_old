@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-07-01 17:36:28
  * @LastEditors: xinxu
- * @LastEditTime: 2022-07-04 17:27:54
+ * @LastEditTime: 2022-07-04 20:32:16
  * @FilePath: /Blog/docs/promise/Promise.md
 -->
 
@@ -150,19 +150,126 @@ class Promise {
   }
 }
 ```
-### promise链式调用
-* 如果then方法中（成功或失败），返回的不是一个promise，那么会将then的返回值出递给外层下一个then的成功的结果。
-* 如果then方法出错、抛出异常，则会走外层下一个then方法的失败。
-* 如果then返回的是个promise，则会用promise的成功或失败，来走外层then的成功或失败。
-* 什么时候会当前的then走完会走下一个then的失败：
-  * then出错就失败。
-  * 返回的promise出错或失败，就走下个then的失败，其他一律走下个then的成功。
-* then方法为什么能够链式调用：
-  * 因为每次调用then方法都会返回一个新的promise，才能保证状态一直改变（当上层的promise失败时，之后会走then方法的失败onRejected，返回新的promise会走下个then的成功onFulfilled）
-  * catch就是then方法的别名，没有成功只有失败（找最近的优先处理，处理不了就向下找），也就是说promise失败，会先走then的onRejected方法返回失败的值，如果找不到，就会走catch。
 
-> Promise链式调用原理一：then同步状态，返回的不是promise
+### promise 链式调用
+
+- 如果 then 方法中（成功或失败），返回的不是一个 promise，那么会将 then 的返回值出递给外层下一个 then 的成功的结果。
+- 如果 then 方法出错、抛出异常，则会走外层下一个 then 方法的失败。
+- 如果 then 返回的是个 promise，则会用 promise 的成功或失败，来走外层 then 的成功或失败。
+- 什么时候会当前的 then 走完会走下一个 then 的失败：
+  - then 出错就失败。
+  - 返回的 promise 出错或失败，就走下个 then 的失败，其他一律走下个 then 的成功。
+- then 方法为什么能够链式调用：
+  - 因为每次调用 then 方法都会返回一个新的 promise，才能保证状态一直改变（当上层的 promise 失败时，之后会走 then 方法的失败 onRejected，返回新的 promise 会走下个 then 的成功 onFulfilled）
+  - catch 就是 then 方法的别名，没有成功只有失败（找最近的优先处理，处理不了就向下找），也就是说 promise 失败，会先走 then 的 onRejected 方法返回失败的值，如果找不到，就会走 catch。
+
+> Promise 链式调用原理一：then 同步状态，返回的不是 promise
+
 ```js
+const Promise = require("./promise.js");
+function read(...args) {
+  return new Promise((resolve, reject) => {
+    resolve();
+  });
+}
+let p = read("name.txt", "utf8");
+let promise2 = p.then(
+  (data) => {
+    return 100;
+    // throw new Error()
+  },
+  (err) => {
+    return 200;
+  }
+);
+promise2.then(
+  (data) => {
+    console.log(data);
+  },
+  (err) => {
+    console.log("err", err);
+  }
+);
+```
 
+```js
+const STATUS = {
+  PENDING: "PENDING",
+  FULFILLED: "FULFILLED",
+  REJECTED: "REJECTED",
+};
+class Promise {
+  constructor(executor) {
+    this.status = "PENDING";
+    this.value = undefined;
+    this.reason = undefined;
+    this.onResolveCallbacks = [];
+    this.onRejectCallbacks = [];
+    const resolve = (val) => {
+      // 最外层的promise状态
+      this.status = STATUS.FULFILLED;
+      this.value = val;
+      this.onResolveCallbacks.forEach((fn) => fn());
+    };
+    const reject = (reason) => {
+      this.status = STATUS.REJECTED;
+      this.reason = reason;
+      this.onRejectCallbacks.forEach((fn) => fn());
+    };
+    try {
+      executor(resolve, reject);
+    } catch (e) {
+      reject(e);
+    }
+  }
+  then(onFulfilled, onRejected) {
+    let promise2 = new Promise((resolve, reject) => {
+      if (this.status === STATUS.FULFILLED) {
+        // 上层promise成功
+        try {
+          // 走then方法成功，返回的不是promise
+          let x = onFulfilled(this.value);
+          resolve(x); // 会将值传给外层下一个then的成功结果里
+        } catch (e) {
+          // then成功方法执行时抛出异常
+          reject(e); // 会将异常传给外层下一个then的失败结果里
+        }
+      }
+      if (this.status === STATUS.REJECTED) {
+        // 上层promise失败
+        try {
+          // 走then方法失败，返回的不是promise
+          let x = onRejected(this.reason);
+          resolve(x); // 会将值传给外层then方法的成功里
+        } catch (e) {
+          // 走then方法失败，抛异常
+          reject(e); // 会将异常传给外层then的失败结果里
+        }
+      }
+      if (this.status === STATUS.PENDING) {
+        this.onResolveCallbacks.push(() => {
+          try {
+            let x = onFulfilled(this.value);
+            resolve(x);
+          } catch (e) {
+            reject(e);
+          }
+        });
+        this.onRejectCallbacks.push(() => {
+          try {
+            let x = onRejected(this.reason);
+            resolve(x);
+          } catch (e) {
+            reject(e);
+          }
+        });
+      }
+    });
+    return promise2; // promise调用then方法会生成新的promise
+  }
+}
+```
+> Promise链式调用原理二：then异步状态，返回的不是promise
+```js
 
 ```
