@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-07-01 17:36:28
  * @LastEditors: xinxu
- * @LastEditTime: 2022-07-07 20:25:56
+ * @LastEditTime: 2022-07-07 20:36:05
  * @FilePath: /Blog/docs/promise/Promise.md
 -->
 
@@ -435,6 +435,297 @@ class Promise {
       }
     });
     return promsie2;
+  }
+}
+```
+
+### promise.then 方法中的 onFulfilled 和 onRejected 是可选参数，没有传就忽略他。
+
+```js
+// 这种情况是如何实现的
+let p = new Promise((resolve, reject) => {
+  resolve("ok");
+})
+  .then()
+  .then()
+  .then()
+  .then((data) => {
+    console.log(data); // ok
+  });
+```
+
+```js
+const STATUS = {PENDING: 'PENDING', FULFILLED: 'FULFILLED', REJECTED:'REJECTED'}
+function resolvePromise (x, promise2, resolve, reject) {
+    if (x === promise2) {
+        reject(new TypeError('出错了))
+    }
+    // 如果x是对象
+    if ((typeof x === 'object' && x !== null) || typeof x === 'function') {
+        let called
+        try{
+           let then = x.then
+           // then是个函数，x就是promise
+           if (typeof then === 'function') {
+              // 根据x的状态判断promise2状态
+              then.call(x, function(y) {
+                  if (called) return
+                  called = true
+                  resolvePromise(y, promise2, resolve, reject)
+              }, function (r) {
+                  if (called) return
+                  called = true
+                  reject(r)
+              })
+           } else { // then不是函数，就是个普通对象
+               resolve(x)
+           }
+        } catch (e) { // 取then方法是出错
+            if (called) return
+            called = true
+            reject(e)
+        }
+    } else { // x是普通值
+        resolve(x)
+    }
+}
+class Promise {
+    constructor(executor) {
+        this.status = 'PENDING'
+        this.value = undefined
+        this.reason = undefined
+        this.onResolveCallbacks = []
+        this.onRejectCallbacks = []
+        const resolve = (val) => {
+            this.status = STATUS.FULFILLED
+            this.value = val
+            this.onResolveCallbacks.forEach(fn => fn())
+        }
+        const reject = (reason) => {
+            this.status = STATUS.REJECTED
+            this.reason = reason
+            this.onRejectCallbacks.forEach(fn => fn())
+        }
+        try {
+            executor(resolve, reject)
+        } catch (e) {
+            reject(e)
+        }
+    }
+    then (onFulfilled, onRejected) {
+        // 看onFulfilled是不是函数，是：就是传参了就直接用onFulfilled，不是：就给他补充上去成功的回调
+        typeof onFulfilled === 'function' ? onFulfilled : data => data
+        typeof onRejected === 'function' ? onRejected : err => {throw err}
+        let promise2 = new Promsie((resolve, reject) => {
+            if (this.status === STATUS.FULFILLED) {
+                setTimeout(()=> {
+                    try{
+                        let x = onFufilled(this.value)
+                        resolvePromise(x, promise2, resolve, reject)
+                    } catch (e) {
+                        reject(e)
+                    }
+                }, 0)
+            }
+            if (this.status === STATUS.REJECTED) {
+                setTimeout(()=> {
+                    try{
+                        let x = onRejected(this.value)
+                        resolvePromise(x, promise2, resolve, reject)
+                    } catch (e) {
+                        reject(e)
+                    }
+                }, 0)
+            }
+            if (this.status === STATUS.PENDING) {
+                setTimeout(()=> {
+                    this.onResolveCallbacks.push(()=>{
+                        try{
+                            let x = onFufilled(this.value)
+                            resolvePromise(x, promise2, resolve, reject)
+                        } catch (e) {
+                            reject(e)
+                        }
+                    })
+                }, 0)
+                setTimeout(()=> {
+                    this.onRejectCallbacks.push(()=>{
+                        try{
+                            let x = onRejected(this.value)
+                            resolvePromise(x, promise2, resolve, reject)
+                        } catch (e) {
+                            reject(e)
+                        }
+                    })
+                }, 0)
+            }
+        })
+        return promise2
+    }
+}
+// promise测试时调用此方法
+Promise.defer = Promsie.deffered = function () {
+    let dfd = {}
+    dfd.promise = new Promise((resolve, reject) => {
+        dfd.resolve = resolve
+        dfd.reject = reject
+    })
+    // 测试是看dfd上的promise实例，resolve，reject方法是否符合规范
+    return dfd
+}
+module.exports = Promise
+```
+
+### Promise.resolve()是一个静态方法：（类直接调用）
+
+- 可以理解为，一个帮我们创建成功的 Promise。
+- Promise.resolve()，可以等待一个 promise 执行完成。
+
+### Promise.reject()是一个静态方法：直接报错。
+
+```js
+let p = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve("ok");
+  }, 1000);
+});
+Promise.resolve(p).then((data) => {
+  console.log(data); // 1秒后打印ok
+});
+Promise.reject(p).catch((data) => {
+  console.log(data);
+});
+```
+
+```js
+const STATUS = {
+  PENDING: "PENDING",
+  FULFILLED: "FULFILLED",
+  REJECTED: "REJECTED",
+};
+function resolvePromise(x, promise2, resolve, reject) {
+  if (x === promsie2) {
+    return new TypeError("出错了");
+  }
+  if ((typeof x === "object" && x !== null) || typeof x === "function") {
+    let called;
+    try {
+      let then = x.then;
+      if (typeof then === "function") {
+        then.call(
+          x,
+          function (y) {
+            if (called) return;
+            called = true;
+            resolvePromise(y, promise2, resolve, reject);
+          },
+          function (r) {
+            if (called) return;
+            called = true;
+            reject(r);
+          }
+        );
+      } else {
+        resolve(x);
+      }
+    } catch (e) {
+      if (called) return;
+      called = true;
+      reject(e);
+    }
+  } else {
+    resolve(x);
+  }
+}
+class Promise {
+  constructor(executor) {
+    this.status = STATUS.PENDING;
+    this.value = undefined;
+    this.reason = undefined;
+    this.onResolveCallbacks = [];
+    this.onRejectCallbacks = [];
+    const resolve = (val) => {
+      if (val instanceof Promise) {
+        // 是promise 就继续递归解析
+        val.then(resolve, reject);
+      }
+      if (this.status === STATUS.PENDING) {
+        this.value = val;
+        this.status = STATUS.FULFILLED;
+        this.onResolveCallbacks.forEach((fn) => fn());
+      }
+    };
+    const reject = (reason) => {
+      this.reason = reason;
+      this.status = STATUS.REJECTED;
+      this.onRejectCallbacks.forEach((fn) => fn());
+    };
+    try {
+      executor(resolve, reject);
+    } catch (e) {
+      reject(e);
+    }
+  }
+  then(onFulfilled, onRejected) {
+    let promise2 = new Promsie((resolve, reject) => {
+      if (this.status === STATUS.FULFILLED) {
+        setTimeout(() => {
+          try {
+            let x = onFulfilled(this.value);
+            resolvePromise(x, promise2, resolve, reject);
+          } catch (e) {
+            reject(e);
+          }
+        }, 0);
+      }
+      if (this.status === STATUS.REJECTED) {
+        setTimeout(() => {
+          try {
+            let x = onRejected(this.value);
+            resolvePromise(x, promise2, resolve, reject);
+          } catch (e) {
+            reject(e);
+          }
+        }, 0);
+      }
+      if (this.status === STATUS.PENDING) {
+        setTimeout(() => {
+          this.onResolveCallbacks.push(() => {
+            try {
+              let x = onFulfilled(this.value);
+              resolvePromise(x, promise2, resolve, reject);
+            } catch (e) {
+              reject(e);
+            }
+          });
+        }, 0);
+        setTimeout(() => {
+          this.onRejectCallbacks.push(() => {
+            try {
+              let x = onFulfilled(this.value);
+              resolvePromise(x, promise2, resolve, reject);
+            } catch (e) {
+              reject(e);
+            }
+          });
+        }, 0);
+      }
+    });
+    return promise2;
+  }
+  catch(err) {
+    // catch就是then的简写，只有失败没有成功
+    return this.then(null, err);
+  }
+  static resolve(value) {
+    return new Promsie((resolve, reject) => {
+      resolve(value);
+    });
+  }
+  static reject(reason) {
+    return new Promsie((resolve, reject) => {
+      reject(reason);
+    });
   }
 }
 ```
