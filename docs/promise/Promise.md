@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-07-01 17:36:28
  * @LastEditors: xinxu
- * @LastEditTime: 2022-07-04 20:32:16
+ * @LastEditTime: 2022-07-07 20:25:56
  * @FilePath: /Blog/docs/promise/Promise.md
 -->
 
@@ -269,7 +269,172 @@ class Promise {
   }
 }
 ```
-> Promise链式调用原理二：then异步状态，返回的不是promise
-```js
 
+> Promise 链式调用原理二：then 异步状态，返回的不是 promise
+
+```js
+function read (...args) {
+    return new Promise((resolve, reject) => {
+        resolve()
+    })
+}
+let p = read('name.txt','utf8')
+// 判断返回值和promise2的关系，这个返回值决定promise2的成功还是失败
+let promise2 = p.then((data)=>{
+    // 判断当前成功/失败返回的是不是一个promise
+    return new Promise((resolve, reject) => {
+        resolve(return new Promise((resolve, reject) => {
+            resolve(return new Promise((resolve, reject) => {
+                resolve(return new Promise((resolve, reject) => {
+                    setTimeOut(()=>{
+                        resolve('ok')
+                    }, 1000)
+                 }))
+            }))
+        }))
+    })
+})
+promise2.then((data)=>{
+    console.log(data)
+}, err => {
+    console.log('err', err)
+})
+```
+
+```js
+const STATUS = {
+  PENDING: "PENDING",
+  FULFILLED: "FULFILLED",
+  REJECTED: "REJECTED",
+};
+//我们的promise按照规范来写，就可以和别人的promise公用，兼容
+function reslovePromise(x, promsie2, resolve, reject) {
+  // 先要判断promise2和x是不是同一个对象引用，是的话就报类型错误
+  if (promise2 === x) {
+    // 如果promise2 === x，会导致循环引用，自己等自己执行完成
+    return reject(new TypeError("出错了"));
+  }
+  // 看x是普通值还是promise，如果是promise要采用他的状态
+  if ((typeof x === "object" && x !== null) || typeof x === "function") {
+    // x是对象或函数
+    let called; // 防止别人的promise出错（别人的promise可能及调resolve又调reject）
+    try {
+      // 取then的时候有可能失败
+      let then = x.then; // 看一下这个对象是否有then方法
+      if (typeof then === "function") {
+        // then是函数，就认为x是promise
+        // 如果x是promise，那么就采用他的状态
+
+        // 这样写相当于从新获取then,并且存在风险，第一次取then没问题，第二次取就可能有问题了
+        // x.then(function(data){},function(err){})
+
+        // 这样写是拿前面定义的then，then调用call方法，并且this指向x
+        // 这里就是用当前返回promise的结果作为下一次then的成功/失败
+        then.call(
+          x,
+          function (y) {
+            // 成功的回调
+            if (called) return;
+            called = true;
+            // 递归解析成功后的值，知道他是一个普通值为止
+            reslovePromise(y, promise2, resolve, reject);
+          },
+          function (r) {
+            //失败的回调
+            if (called) return;
+            called = true;
+            reject(r);
+          }
+        );
+      } else {
+        resolve(x); // 此时x就是一个普通对象 {then: {}}
+      }
+    } catch (e) {
+      if (called) return;
+      called = true;
+      reject(e); // 取then的时候抛错（因为要兼容别人的promise）
+    }
+  } else {
+    resolve(x); // x是一个原始数据类型，不是promise
+  }
+  // 如果不是promise，就直接调resolve
+}
+class Promise {
+  constructor(executor) {
+    this.status = "PENDING";
+    this.value = undefined;
+    this.reason = undefined;
+    this.onResolveCallbacks = [];
+    this.onRejectCallbacks = [];
+    const resolve = (val) => {
+      this.status = STATUS.FULFILLED;
+      this.value = val;
+      this.onResolveCallbacks.forEach((fn) => fn());
+    };
+    const reject = (reason) => {
+      this.status = STATUS.REJECTED;
+      this.reason = reason;
+      this.onRejectCallbacks.forEach((fn) => fn());
+    };
+    try {
+      executor(resolve, reject);
+    } catch (e) {
+      reject(e);
+    }
+  }
+  then(onFulfilled, onRejected) {
+    // then方法的onFulfilled和onRejected，是需要异步调用的
+    let promise2 = new Promsie((resolve, reject) => {
+      // x有可能是promise，有可能是普通值
+      if (this.status === STATUS.FULFILLED) {
+        // 判断时同步的
+        setTimeout(() => {
+          try {
+            let x = onFulfilled(this.value);
+            // 判断x是promise还是普通值，并且当x是promise时，x的状态决定promise2的成功/失败
+            reslovePromise(x, promsie2, resolve, reject);
+            // 此时promise2是在实例化，拿不到，所以需要用个定时器，就可以取到，
+            //（用宏任务（setTimeout/setImmdieate）/微任务（process.nextTick））,单独执行栈
+            // 这样的话就是promise2先new完，再调定时器把promise2传进去
+          } catch (e) {
+            reject(e);
+          }
+        }, 0);
+      }
+      if (this.status === STATUS.REJECTED) {
+        setTimeout(() => {
+          try {
+            let x = onRejected(this.reason);
+            reslovePromise(x, promsie2, resolve, reject);
+          } catch (e) {
+            reject(e);
+          }
+        }, 0);
+      }
+      if (this.status === STATUS.PENDING) {
+        this.onResolveCallbacks.push(() => {
+          setTimeout(() => {
+            try {
+              let x = onFulfilled(this.value);
+              reslovePromise(x, promsie2, resolve, reject);
+            } catch (e) {
+              reject(e);
+            }
+          }, 0);
+        });
+        this.onRejectCallbacks.push(() => {
+          setTimeout(() => {
+            try {
+              let x = onRejected(this.reason);
+              reslovePromise(x, promsie2, resolve, reject);
+            } catch (e) {
+              reject(e);
+            }
+          }, 0);
+        });
+      }
+    });
+    return promsie2;
+  }
+}
 ```
