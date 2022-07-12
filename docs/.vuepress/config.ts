@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-06-29 15:51:52
  * @LastEditors: xinxu
- * @LastEditTime: 2022-07-04 14:19:39
+ * @LastEditTime: 2022-07-12 11:45:11
  * @FilePath: /Blog/docs/.vuepress/config.ts
  */
 import { defineUserConfig } from "vuepress";
@@ -30,6 +30,10 @@ export default defineUserConfig({
           {
             text: "promise原理",
             link: "/promise/promise.md",
+          },
+          {
+            text: "promise方法",
+            link: "/promise/promise方法.md",
           }
         ]
       },
