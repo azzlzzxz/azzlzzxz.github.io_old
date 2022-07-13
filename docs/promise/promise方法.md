@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-07-07 20:39:54
  * @LastEditors: xinxu
- * @LastEditTime: 2022-07-12 11:43:25
+ * @LastEditTime: 2022-07-12 14:17:22
  * @FilePath: /Blog/docs/promise/promise方法.md
 -->
 
@@ -32,7 +32,7 @@ Promise.all = function (promises) {
   return new Promise((resolve, reject) => {
     let result = [];
     let times = 0;
-    //做定时器的原因是：[1,getName,getAge,2]循环走到2，那么getName,getAge是empty，因为是异步的，所以不能用result.length === promises.length作为判断条件
+    //做计数器的原因是：[1,getName,getAge,2]循环走到2，那么getName,getAge是empty，因为是异步的，所以不能用result.length === promises.length作为判断条件
     function processData(i, val) {
       result[i] = val;
       if (times++ === promises.length) {
