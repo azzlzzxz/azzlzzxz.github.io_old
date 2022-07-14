@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-06-29 15:51:52
  * @LastEditors: xinxu
- * @LastEditTime: 2022-07-12 11:45:11
+ * @LastEditTime: 2022-07-14 13:43:23
  * @FilePath: /Blog/docs/.vuepress/config.ts
  */
 import { defineUserConfig } from "vuepress";
@@ -12,7 +12,7 @@ export default defineUserConfig({
   lang: "zh-CN",
   title: "Steins Gate 主页",
   description: "Steins Gate的前端记录",
-  head: [["link", { rel: "icon", href: "/logo.jpeg" }]],
+  head: [["link", { rel: "icon", href: "/logo.png" }]],
   theme: defaultTheme({
     navbar: [
       {

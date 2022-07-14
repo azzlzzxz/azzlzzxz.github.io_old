@@ -1,6 +1,6 @@
 ---
 home: true
-heroImage: /logo.jpeg
+heroImage: /logo.png
 heroText: Steins Gate的前端记录
 tagline: 一点一滴都是进步
 actions:
