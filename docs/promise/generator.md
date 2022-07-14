@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-07-12 14:18:48
  * @LastEditors: xinxu
- * @LastEditTime: 2022-07-14 20:30:50
+ * @LastEditTime: 2022-07-14 20:33:18
  * @FilePath: /Blog/docs/promise/generator.md
 -->
 
@@ -107,7 +107,7 @@ co(read())
   });
 ```
 **async + await = generator + co**
-```
+```js
 const fs = require('fs').promises
 async read () {
     let name = await fs.readFile('name.txt', 'utf8')
