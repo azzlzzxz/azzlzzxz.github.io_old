@@ -2,11 +2,12 @@
  * @Author: xinxu
  * @Date: 2022-06-29 15:51:52
  * @LastEditors: xinxu
- * @LastEditTime: 2022-07-14 13:43:23
+ * @LastEditTime: 2022-07-14 20:26:57
  * @FilePath: /Blog/docs/.vuepress/config.ts
  */
 import { defineUserConfig } from "vuepress";
 const { defaultTheme } = require("@vuepress/theme-default");
+const { searchPlugin } = require("@vuepress/plugin-search");
 
 export default defineUserConfig({
   lang: "zh-CN",
@@ -20,41 +21,25 @@ export default defineUserConfig({
         link: "/node/commonJs.md",
       },
     ],
-    sidebar: [
-      {
-        text: "JS基础",
-      },
-      {
-        text: "Promise",
-        children: [
-          {
-            text: "promise原理",
-            link: "/promise/promise.md",
-          },
-          {
-            text: "promise方法",
-            link: "/promise/promise方法.md",
-          }
-        ]
-      },
-      {
-        text: "Vue",
-      },
-      {
-        text: "React",
-      },
-      {
-        text: "Webpack",
-      },
-      {
-        text: "Node",
-        children: [
-          {
-            text: "commonJS规范",
-            link: "/node/commonJs.md",
-          },
-        ],
-      },
-    ],
+    sidebar: {
+      "/promise/": [
+        {
+          text: "Promise",
+          collapsible: true,
+          children: [
+            "/promise/promise.md",
+            "/promise/promise方法.md",
+            "/promise/generator.md",
+          ],
+        },
+      ],
+      "/node/": [
+        {
+          text: "Node",
+          collapsible: true,
+          children: ["/node/commonJs.md"],
+        },
+      ],
+    },
   }),
 });

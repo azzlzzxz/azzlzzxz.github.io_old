@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-07-01 17:36:28
  * @LastEditors: xinxu
- * @LastEditTime: 2022-07-07 20:36:05
+ * @LastEditTime: 2022-07-14 20:22:27
  * @FilePath: /Blog/docs/promise/Promise.md
 -->
 
@@ -27,7 +27,7 @@
 - 每一个 Promise 实例都有 then 方法。
 - 如果抛出异常，按失败来处理。
 
-### 先简单实现一个同步状态的 promise
+1. **先简单实现一个同步状态的 promise**
 
 ```javascript
 const Promise = require("./promise.js");
@@ -85,7 +85,7 @@ module.exports = Promise;
 👆 那个 promise 无法解决异步问题（promise 里放定时器）。  
 这时就需要把 then 里的 onFulfilled 和 onReject 函数存起来，当 Promise 走 resolve 和 rejected 时才调用，利用订阅发布模式
 
-### 再实现一个异步状态的 promise
+2. **再实现一个异步状态的 promise**
 
 ```js
 let p = new Promise((resolve, rejected) => {
@@ -439,7 +439,7 @@ class Promise {
 }
 ```
 
-### promise.then 方法中的 onFulfilled 和 onRejected 是可选参数，没有传就忽略他。
+3. **promise.then 方法中的 onFulfilled 和 onRejected 是可选参数，没有传就忽略他。**
 
 ```js
 // 这种情况是如何实现的
@@ -576,13 +576,13 @@ Promise.defer = Promsie.deffered = function () {
 module.exports = Promise
 ```
 
-### Promise.resolve()是一个静态方法：（类直接调用）
-
+### Promise.resolve
+Promise.resolve()是一个静态方法：（类直接调用）
 - 可以理解为，一个帮我们创建成功的 Promise。
 - Promise.resolve()，可以等待一个 promise 执行完成。
 
-### Promise.reject()是一个静态方法：直接报错。
-
+### Promise.reject
+Promise.reject()是一个静态方法：直接报错。
 ```js
 let p = new Promise((resolve, reject) => {
   setTimeout(() => {
