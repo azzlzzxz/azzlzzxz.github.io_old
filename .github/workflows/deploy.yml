@@ -1,10 +1,10 @@
 name: GitHub Actions Build and Deploy
 
-# 触发条件: push 到 master 分支后
+# 触发条件: push 到 main 分支后
 on:
   push:
     branches:
-      - master
+      - main
 
 # 设置上海时区
 env:
