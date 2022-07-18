@@ -2,12 +2,12 @@
  * @Author: xinxu
  * @Date: 2022-06-29 15:51:52
  * @LastEditors: xinxu
- * @LastEditTime: 2022-07-14 20:26:57
- * @FilePath: /Blog/docs/.vuepress/config.ts
+ * @LastEditTime: 2022-07-18 22:17:48
+ * @FilePath: /azzlzzxz.github.io/docs/.vuepress/config.ts
  */
 import { defineUserConfig } from "vuepress";
 const { defaultTheme } = require("@vuepress/theme-default");
-const { searchPlugin } = require("@vuepress/plugin-search");
+// const { searchPlugin } = require("@vuepress/plugin-search");
 
 export default defineUserConfig({
   lang: "zh-CN",
@@ -20,6 +20,15 @@ export default defineUserConfig({
         text: "commonJs",
         link: "/node/commonJs.md",
       },
+      {
+        text: "前端框架",
+        children: [
+          {
+            text: 'vue',
+            children: ['/vue/vue3源码.md'],
+          },
+        ],
+      }
     ],
     sidebar: {
       "/promise/": [
