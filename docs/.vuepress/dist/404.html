@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="generator" content="VuePress 2.0.0-beta.48">
+    <style>
+      :root {
+        --c-bg: #fff;
+      }
+      html.dark {
+        --c-bg: #22272e;
+      }
+      html, body {
+        background-color: var(--c-bg);
+      }
+    </style>
+    <script>
+      const userMode = localStorage.getItem('vuepress-color-scheme');
+			const systemDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+			if (userMode === 'dark' || (userMode !== 'light' && systemDarkMode)) {
+				document.documentElement.classList.toggle('dark', true);
+			}
+    </script>
+    <link rel="icon" href="/logo.png"><title>Steins Gate 主页</title><meta name="description" content="Steins Gate的前端记录">
+    <link rel="modulepreload" href="/assets/app.72b5a8ad.js"><link rel="modulepreload" href="/assets/404.html.af9f4b21.js"><link rel="modulepreload" href="/assets/404.html.265028f6.js"><link rel="prefetch" href="/assets/index.html.1a96510d.js"><link rel="prefetch" href="/assets/commonJs.html.4b7146af.js"><link rel="prefetch" href="/assets/Promise.html.881b9a76.js"><link rel="prefetch" href="/assets/generator.html.179968c8.js"><link rel="prefetch" href="/assets/promise方法.html.bdfd6262.js"><link rel="prefetch" href="/assets/index.html.00081d5b.js"><link rel="prefetch" href="/assets/commonJs.html.2d4884e9.js"><link rel="prefetch" href="/assets/Promise.html.28a1a557.js"><link rel="prefetch" href="/assets/generator.html.facaa392.js"><link rel="prefetch" href="/assets/promise方法.html.b7641ec6.js"><link rel="prefetch" href="/assets/404.6ae62011.js"><link rel="prefetch" href="/assets/Layout.4ebb4337.js">
+    <link rel="stylesheet" href="/assets/style.acf36ec1.css">
+  </head>
+  <body>
+    <div id="app"><!--[--><div class="theme-container"><div class="theme-default-content"><h1>404</h1><blockquote>There&#39;s nothing here.</blockquote><a href="/" class="">Take me home</a></div></div><!----><!--]--></div>
+    <script type="module" src="/assets/app.72b5a8ad.js" defer></script>
+  </body>
+</html>
