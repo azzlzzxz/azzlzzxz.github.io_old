@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-06-29 15:51:52
  * @LastEditors: xinxu
- * @LastEditTime: 2022-07-18 22:17:48
+ * @LastEditTime: 2022-07-19 10:43:55
  * @FilePath: /azzlzzxz.github.io/docs/.vuepress/config.ts
  */
 import { defineUserConfig } from "vuepress";
@@ -17,10 +17,6 @@ export default defineUserConfig({
   theme: defaultTheme({
     navbar: [
       {
-        text: "commonJs",
-        link: "/node/commonJs.md",
-      },
-      {
         text: "前端框架",
         children: [
           {
@@ -28,7 +24,11 @@ export default defineUserConfig({
             children: ['/vue/vue3源码.md'],
           },
         ],
-      }
+      },
+      {
+        text: "TS",
+        link: "/typescript/ts.md",
+      },
     ],
     sidebar: {
       "/promise/": [
