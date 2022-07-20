@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-07-20 11:28:35
  * @LastEditors: xinxu
- * @LastEditTime: 2022-07-20 13:59:20
+ * @LastEditTime: 2022-07-20 19:58:12
  * @FilePath: /azzlzzxz.github.io/docs/typescript/type.md
 -->
 # TS中的类型
@@ -36,3 +36,33 @@ TypeScript 可辨识联合类型，也称为代数数据类型或标签联合类
 这种类型的本质是结合联合类型和字面量类型的一种类型保护方法。  
 如果一个类型是多个类型的联合类型，且多个类型含有一个公共属性，那么就可以利用这个公共属性，来创建不同的类型保护区块。  
 利用联合类型中得公共字段，来进行类型保护的一种技巧。   
+
+1. 可辨识
+可辨识要求联合类型中的每个元素都含有一个单例类型属性，比如:
+```ts
+enum CarTransmission {
+  Automatic = 200,
+  Manual = 300
+}
+
+interface Motorcycle {
+  vType: "motorcycle"; // discriminant
+  make: number; // year
+}
+
+interface Car {
+  vType: "car"; // discriminant
+  transmission: CarTransmission
+}
+
+interface Truck {
+  vType: "truck"; // discriminant
+  capacity: number; // in tons
+}
+```
+
+在上述代码中，我们分别定义了 Motorcycle、 Car 和 Truck 三个接口，在这些接口中都包含一个 vType 属性，该属性被称为可辨识的属性，而其它的属性只跟特性的接口相关。
+
+```ts
+
+```
