@@ -2,11 +2,14 @@
  * @Author: xinxu
  * @Date: 2022-07-19 10:42:25
  * @LastEditors: xinxu
- * @LastEditTime: 2022-07-19 10:42:42
+ * @LastEditTime: 2022-07-20 11:33:25
  * @FilePath: /azzlzzxz.github.io/docs/typescript/ts.md
 -->
-## TypeScript
-
+# 了解TypeScript
+TypeScript，简称 ts，是微软开发的一种静态的编程语言，它是 JavaScript 的超集。 那么它有什么特别之处呢?
+* 简单来说，js 有的 ts 都有，所有js 代码都可以在 ts 里面运行。
+* ts 支持类型支持，ts = type +JavaScript
+![image](/images/ts.png)
 * tsconfig.json配置
 ```json
 {
@@ -18,11 +21,11 @@
     // 路径是c:a/b/c.js，但是import(d)
     // moduleResolution:classic --> c:/a/b/d -> c:/a/d -> c:/d ->找不到就报错
     "jsx": "preserve" // 保留不转译
-    // jsx:'resct' 会把jsx -> React.createElement
+    // jsx:'react' 会把jsx -> React.createElement
     "resolveJsonModule": true, // 支持json模块
     "strictNullChecks": true,// 严格空检查，建议打开
     "noImplicitAny": true, // 不允许隐含any类型
-    // exnext 最新版的es
+    // esnext 最新版的es
     "lib": ["ESNext", "dom"], // 支持那些库
     "experimentalDecorators": true, // 让ts支持装饰器  
     "downlevelIteration": true,

@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-06-29 15:51:52
  * @LastEditors: xinxu
- * @LastEditTime: 2022-07-19 10:43:55
+ * @LastEditTime: 2022-07-20 13:48:14
  * @FilePath: /azzlzzxz.github.io/docs/.vuepress/config.ts
  */
 import { defineUserConfig } from "vuepress";
@@ -49,6 +49,12 @@ export default defineUserConfig({
           children: ["/node/commonJs.md"],
         },
       ],
+      "/typescript/": [
+        {
+          text: "TS",
+          children: ["/typescript/ts.md", "/typescript/type.md"],
+        }
+      ]
     },
   }),
 });
