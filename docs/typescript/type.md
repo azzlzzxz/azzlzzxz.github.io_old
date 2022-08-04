@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-07-20 11:28:35
  * @LastEditors: xinxu
- * @LastEditTime: 2022-08-01 20:49:54
+ * @LastEditTime: 2022-08-04 19:32:55
  * @FilePath: /azzlzzxz.github.io/docs/typescript/type.md
 -->
 
@@ -75,7 +75,7 @@ interface Truck {
 在上述代码中，我们分别定义了  Motorcycle、 Car  和  Truck  三个接口，在这些接口中都包含一个  vType  属性，该属性被称为可辨识的属性，而其它的属性只跟特性的接口相关。
 
 ```ts
-const Car = "car";
+const Car: string = "car";
 ```
 
 ```ts
