@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-07-20 11:28:35
  * @LastEditors: xinxu
- * @LastEditTime: 2022-08-07 22:49:31
+ * @LastEditTime: 2022-08-07 22:52:13
  * @FilePath: /azzlzzxz.github.io/docs/typescript/type.md
 -->
 
@@ -83,3 +83,27 @@ const Car: string = "car";
 ```
 
 ### 交叉类型
+
+交叉类型是多个类型合并为一个类型。  
+这让我们可以吧现有的多种类型叠加到一起成为一种类型，它包含所需的所有类型特性。
+
+```ts
+interface A {
+  name: string;
+}
+interface B {
+  age: number;
+  c: string;
+}
+type C = A & B;
+let c: C = { name: "czp", age: 10, c: "dog" }; // A,B的子类型
+let a: A;
+let b: B;
+
+a = c;
+b = c;
+
+type AA = string | number;
+type BB = string | boolean;
+type CC = AA & BB; //string
+```
