@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-07-20 11:28:35
  * @LastEditors: xinxu
- * @LastEditTime: 2022-08-04 19:32:55
+ * @LastEditTime: 2022-08-07 22:49:31
  * @FilePath: /azzlzzxz.github.io/docs/typescript/type.md
 -->
 
@@ -81,3 +81,5 @@ const Car: string = "car";
 ```ts
 
 ```
+
+### 交叉类型
