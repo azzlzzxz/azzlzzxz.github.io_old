@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-07-20 11:28:35
  * @LastEditors: xinxu
- * @LastEditTime: 2022-08-07 22:52:13
+ * @LastEditTime: 2022-08-08 23:15:15
  * @FilePath: /azzlzzxz.github.io/docs/typescript/type.md
 -->
 
@@ -107,3 +107,8 @@ type AA = string | number;
 type BB = string | boolean;
 type CC = AA & BB; //string
 ```
+
+### 类型守卫
+
+1. 类型保护就是一些表达式，他们在编译的时候就能通过类型信息确保某个作用域变量的类型。
+2. 类型保护就是能通过关键字(typeof,instanceof,in)来缩小范围，判断出分支中的类型。
