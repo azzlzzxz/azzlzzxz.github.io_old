@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-06-29 15:51:52
  * @LastEditors: xinxu
- * @LastEditTime: 2022-07-20 13:48:14
+ * @LastEditTime: 2022-08-17 14:06:01
  * @FilePath: /azzlzzxz.github.io/docs/.vuepress/config.ts
  */
 import { defineUserConfig } from "vuepress";
@@ -20,8 +20,8 @@ export default defineUserConfig({
         text: "前端框架",
         children: [
           {
-            text: 'vue',
-            children: ['/vue/vue3源码.md'],
+            text: "vue",
+            children: ["/vue/vue3源码.md"],
           },
         ],
       },
@@ -52,9 +52,13 @@ export default defineUserConfig({
       "/typescript/": [
         {
           text: "TS",
-          children: ["/typescript/ts.md", "/typescript/type.md"],
-        }
-      ]
+          children: [
+            "/typescript/ts.md",
+            "/typescript/type.md",
+            "/typescript/assertion.md",
+          ],
+        },
+      ],
     },
   }),
 });
