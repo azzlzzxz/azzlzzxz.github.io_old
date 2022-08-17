@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-07-20 11:28:35
  * @LastEditors: xinxu
- * @LastEditTime: 2022-08-17 11:43:35
+ * @LastEditTime: 2022-08-17 13:59:57
  * @FilePath: /azzlzzxz.github.io/docs/typescript/type.md
 -->
 
@@ -75,13 +75,31 @@ interface Truck {
 
 在上述代码中，我们分别定义了  Motorcycle、 Car  和  Truck  三个接口，在这些接口中都包含一个  vType  属性，该属性被称为可辨识的属性，而其它的属性只跟特性的接口相关。
 
-```ts
-const Car: string = "car";
-```
+### 联合类型
+
+基于前面定义了三个接口，我们可以创建一个  Vehicle  联合类型：
 
 ```ts
-
+type car = Motorcycle | Car | Truck;
 ```
+
+### 类型别名
+
+类型别名用来给一个类型起个新名字：
+
+```ts
+type Message = string | string[];
+
+let greet = (message: Message) => {
+  // ...
+};
+```
+
+interface 和 type 的区别：
+
+1. 接口创建了一个新的名字，他可以在其他任意地方被调用，而类型别名并不创建新的名字，例如报错信息就不会使用别名。
+2. 类型别名不能被 extends 和 implements，这时候我们应该尽量使用接口代替类型别名。
+3. 当我们需要使用联合类型或元组类型的时候，类型别名会更合适。
 
 ## 交叉类型
 
