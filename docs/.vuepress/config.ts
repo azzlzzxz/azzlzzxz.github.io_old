@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-06-29 15:51:52
  * @LastEditors: xinxu
- * @LastEditTime: 2022-08-17 14:06:01
+ * @LastEditTime: 2022-08-17 14:37:45
  * @FilePath: /azzlzzxz.github.io/docs/.vuepress/config.ts
  */
 import { defineUserConfig } from "vuepress";
@@ -56,6 +56,8 @@ export default defineUserConfig({
             "/typescript/ts.md",
             "/typescript/type.md",
             "/typescript/assertion.md",
+            "/typescript/function.md",
+            "/typescript/class.md",
           ],
         },
       ],
