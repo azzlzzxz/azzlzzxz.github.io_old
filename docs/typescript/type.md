@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-07-20 11:28:35
  * @LastEditors: xinxu
- * @LastEditTime: 2022-08-17 13:59:57
+ * @LastEditTime: 2022-08-17 14:39:51
  * @FilePath: /azzlzzxz.github.io/docs/typescript/type.md
 -->
 
@@ -281,3 +281,5 @@ a?.[x];
 // a?.b() // 调方法
 // a?.[x]()
 ```
+
+## 类型推断
