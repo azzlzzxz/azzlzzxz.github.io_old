@@ -32,9 +32,7 @@ jobs:
         with:
           # GitHub 密钥
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          BASE_BRANCH: main
           # GitHub Pages 读取的分支
           BRANCH: gh-pages
           # 静态文件所在目录
           FOLDER: docs/.vuepress/dist
-          SINGLE_COMMIT: true
