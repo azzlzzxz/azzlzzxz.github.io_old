@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-08-17 14:38:14
  * @LastEditors: xinxu
- * @LastEditTime: 2022-08-23 17:40:33
+ * @LastEditTime: 2022-08-23 19:56:56
  * @FilePath: /azzlzzxz.github.io/docs/typescript/class.md
 -->
 
@@ -39,7 +39,7 @@ user.name = "steins"; // steins 给了set
 console.log(user.name); // get方法
 ```
 
-### readonly 只读
+## readonly 只读
 
 ```ts
 class Animal {
@@ -54,7 +54,7 @@ class Animal {
 }
 ```
 
-### 继承
+## 继承
 
 ```ts
 class Person {
@@ -88,7 +88,7 @@ console.log(s1.getStuNo()); // 1
 console.log(s1.name); // 'czp'
 ```
 
-### 类里的修饰符
+## 类里的修饰符
 
 1. public(公共) 自己的子类和其他类都能访问。
 2. protected(受保护的) 自己和自己子类能访问，其他类不能访问。
@@ -144,7 +144,7 @@ child.toString(); // father child
 father.toString(); // father
 ```
 
-### export
+## export
 
 ```ts
 export {};
@@ -166,7 +166,7 @@ p1.name = "sxx";
 p1.getName();
 ```
 
-### 类的 TS 转 JS
+## 类的 TS 转 JS
 
 ```ts
 // ts
