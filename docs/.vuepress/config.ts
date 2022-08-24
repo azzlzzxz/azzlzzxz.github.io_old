@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-06-29 15:51:52
  * @LastEditors: xinxu
- * @LastEditTime: 2022-08-22 22:44:24
+ * @LastEditTime: 2022-08-24 09:53:47
  * @FilePath: /azzlzzxz.github.io/docs/.vuepress/config.ts
  */
 import { defineUserConfig } from "vuepress";
@@ -27,8 +27,15 @@ export default defineUserConfig({
         ],
       },
       {
+        text: "构建工具",
+      },
+      {
         text: "TS",
         link: "/typescript/ts.md",
+      },
+      {
+        text: "Node",
+        link: "/node/commonJS.md",
       },
       {
         text: "主页",
