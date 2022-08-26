@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-08-17 14:38:14
  * @LastEditors: xinxu
- * @LastEditTime: 2022-08-23 19:56:56
+ * @LastEditTime: 2022-08-26 11:28:38
  * @FilePath: /azzlzzxz.github.io/docs/typescript/class.md
 -->
 
@@ -256,3 +256,37 @@ function Child(...args) {
 
 return Child;
 ```
+
+## 抽象类
+
+1. 抽象描述的是一种抽象的概念，无法被实例化，只能继承。
+2. 抽象方法不能在抽象类中实现，只能在抽象类的具体子类中实现，且必须实现。
+
+```ts
+abstract class Animal {
+  //抽象类 abstract
+  name: string;
+  abstract speak(): void; // 抽象方法
+}
+
+class Cat extends Animal {
+  speak(): void {
+    // 抽象方法实现
+    console.log("111");
+  }
+}
+
+class Dog extends Animal {
+  speak(): void {
+    console.log("222");
+  }
+}
+```
+
+### 抽象类 vs 接口
+
+1. 不同类之间共有的属性或方法，可以抽象成一个接口。
+2. 而抽象类是提供其他类继承的基类，抽象类不允许被实例话，抽象类中的抽象方法必须在子类中实现。
+3. 抽象类本质是一个无法被实例化的类，其中能够实现方法和初始化属性，而接口仅能用于描述，既不提供方法的实现，也不为属性进行初始化。
+4. 一个类可以继承一个类或抽象类，但可以实现多个接口。
+5. 抽象类也可以实现接口
