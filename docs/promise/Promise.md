@@ -2,8 +2,8 @@
  * @Author: xinxu
  * @Date: 2022-07-01 17:36:28
  * @LastEditors: xinxu
- * @LastEditTime: 2022-07-14 20:22:27
- * @FilePath: /Blog/docs/promise/Promise.md
+ * @LastEditTime: 2022-12-30 15:28:32
+ * @FilePath: /azzlzzxz.github.io/docs/promise/Promise.md
 -->
 
 # Promise 原理
@@ -56,24 +56,42 @@ const STATUS = {
 
 class Promise {
   constructor(executor) {
+    // 类中的构造函数会传入一个executor
     this.status = STATUS.PENDING;
     this.value = undefined;
     this.reason = undefined;
-    const resolve = (value) => {
-      this.value = value;
-      this.status = STATUS.FULFILLED;
+    const resolve = (val) => {
+      // executor的参数resolve函数
+      if (this.status == STATUS.PENDING) {
+        this.status = STATUS.FULFILLED;
+        this.value = val;
+      }
     };
     const reject = (reason) => {
-      this.reason = reason;
-      this.status = STATUS.REJECTED;
+      //executor的参数reject函数
+      if (this.status == STATUS.PENDING) {
+        this.status = STATUS.REJECTED;
+        this.reason = reason;
+      }
     };
     try {
+      // executor会默认执行
       executor(resolve, reject);
-    } catch (error) {
-      reject(error);
+    } catch (e) {
+      // 出错走失败逻辑
+      reject(e);
     }
   }
+
   then(onFulfilled, onRejected) {
+    onFulfilled =
+      typeof onFulfilled === "function" ? onFulfilled : (value) => value;
+    onRejected =
+      typeof onRejected === "function"
+        ? onRejected
+        : (reason) => {
+            throw reason;
+          };
     if (this.status === STATUS.FULFILLED) onFulfilled(this.value);
     if (this.status === STATUS.REJECTED) onRejected(this.reason);
   }
@@ -135,6 +153,14 @@ class Promise {
     }
   }
   then(onFulfilled, onRejected) {
+    onFulfilled =
+      typeof onFulfilled === "function" ? onFulfilled : (value) => value;
+    onRejected =
+      typeof onRejected === "function"
+        ? onRejected
+        : (reason) => {
+            throw reason;
+          };
     if (this.status === STATUS.FULFILLED) onFulfilled(this.value);
     if (this.status === STATUS.REJECTED) onRejected(this.reason);
     if (this.status === STATUS.PENDING) {
@@ -307,61 +333,26 @@ const STATUS = {
   FULFILLED: "FULFILLED",
   REJECTED: "REJECTED",
 };
-//我们的promise按照规范来写，就可以和别人的promise公用，兼容
-function reslovePromise(x, promsie2, resolve, reject) {
-  // 先要判断promise2和x是不是同一个对象引用，是的话就报类型错误
-  if (promise2 === x) {
-    // 如果promise2 === x，会导致循环引用，自己等自己执行完成
-    return reject(new TypeError("出错了"));
-  }
-  // 看x是普通值还是promise，如果是promise要采用他的状态
-  if ((typeof x === "object" && x !== null) || typeof x === "function") {
-    // x是对象或函数
-    let called; // 防止别人的promise出错（别人的promise可能及调resolve又调reject）
-    try {
-      // 取then的时候有可能失败
-      let then = x.then; // 看一下这个对象是否有then方法
-      if (typeof then === "function") {
-        // then是函数，就认为x是promise
-        // 如果x是promise，那么就采用他的状态
 
-        // 这样写相当于从新获取then,并且存在风险，第一次取then没问题，第二次取就可能有问题了
-        // x.then(function(data){},function(err){})
-
-        // 这样写是拿前面定义的then，then调用call方法，并且this指向x
-        // 这里就是用当前返回promise的结果作为下一次then的成功/失败
-        then.call(
-          x,
-          function (y) {
-            // 成功的回调
-            if (called) return;
-            called = true;
-            // 递归解析成功后的值，知道他是一个普通值为止
-            reslovePromise(y, promise2, resolve, reject);
-          },
-          function (r) {
-            //失败的回调
-            if (called) return;
-            called = true;
-            reject(r);
-          }
-        );
-      } else {
-        resolve(x); // 此时x就是一个普通对象 {then: {}}
-      }
-    } catch (e) {
-      if (called) return;
-      called = true;
-      reject(e); // 取then的时候抛错（因为要兼容别人的promise）
-    }
+function nextTick(callback) {
+  if (
+    typeof process !== "undefined" &&
+    typeof process.nextTick === "function"
+  ) {
+    process.nextTick(callback);
   } else {
-    resolve(x); // x是一个原始数据类型，不是promise
+    const observer = new MutationObserver(callback);
+    const textNode = document.createTextNode("1");
+    observer.observe(textNode, {
+      characterData: true,
+    });
+    textNode.data = "2";
   }
-  // 如果不是promise，就直接调resolve
 }
+
 class Promise {
   constructor(executor) {
-    this.status = "PENDING";
+    this.status = STATUS.PENDING;
     this.value = undefined;
     this.reason = undefined;
     this.onResolveCallbacks = [];
@@ -369,72 +360,170 @@ class Promise {
     const resolve = (val) => {
       this.status = STATUS.FULFILLED;
       this.value = val;
+      // 执行成功回调
       this.onResolveCallbacks.forEach((fn) => fn());
     };
     const reject = (reason) => {
       this.status = STATUS.REJECTED;
       this.reason = reason;
+      // 执行失败回调
       this.onRejectCallbacks.forEach((fn) => fn());
     };
+    // executor会默认执行
     try {
       executor(resolve, reject);
     } catch (e) {
       reject(e);
     }
   }
+
   then(onFulfilled, onRejected) {
-    // then方法的onFulfilled和onRejected，是需要异步调用的
-    let promise2 = new Promsie((resolve, reject) => {
-      // x有可能是promise，有可能是普通值
+    // 2.2.7规范 then 方法必须返回一个新的 promise 对象
+    let promise2 = new Promise((resolve, reject) => {
       if (this.status === STATUS.FULFILLED) {
-        // 判断时同步的
+        /**
+         * 为什么这里要加定时器setTimeout？
+         * 2.2.4规范 onFulfilled 和 onRejected 只有在执行环境堆栈仅包含平台代码时才可被调用 注1
+         * 这里的平台代码指的是引擎、环境以及 promise 的实施代码。
+         * 实践中要确保 onFulfilled 和 onRejected 方法异步执行，且应该在 then 方法被调用的那一轮事件循环之后的新执行栈中执行。
+         * 这个事件队列可以采用“宏任务（macro-task）”机制，比如setTimeout 或者 setImmediate； 也可以采用“微任务（micro-task）”机制来实现， 比如 MutationObserver 或者process.nextTick。
+         */
         setTimeout(() => {
           try {
-            let x = onFulfilled(this.value);
-            // 判断x是promise还是普通值，并且当x是promise时，x的状态决定promise2的成功/失败
-            reslovePromise(x, promsie2, resolve, reject);
-            // 此时promise2是在实例化，拿不到，所以需要用个定时器，就可以取到，
-            //（用宏任务（setTimeout/setImmdieate）/微任务（process.nextTick））,单独执行栈
-            // 这样的话就是promise2先new完，再调定时器把promise2传进去
+            if (typeof onFulfilled !== "function") {
+              // 2.2.7.3规范 如果 onFulfilled 不是函数且 promise1 成功执行， promise2 必须成功执行并返回相同的值
+              resolve(this.value);
+            } else {
+              // 2.2.7.1规范 如果 onFulfilled 或者 onRejected 返回一个值 x ，则运行下面的 Promise 解决过程：[[Resolve]](promise2, x)，即运行resolvePromise()
+              let x = onFulfilled(this.value);
+              resolvePromise(x, promise2, resolve, reject);
+            }
           } catch (e) {
-            reject(e);
+            // 2.2.7.2规范 如果 onFulfilled 或者 onRejected 抛出一个异常 e ，则 promise2 必须拒绝执行，并返回拒绝原因 e
+            reject(e); // 捕获前面onFulfilled中抛出的异常
           }
-        }, 0);
+        });
       }
       if (this.status === STATUS.REJECTED) {
         setTimeout(() => {
           try {
-            let x = onRejected(this.reason);
-            reslovePromise(x, promsie2, resolve, reject);
+            if (typeof onRejected !== "function") {
+              // 2.2.7.4规范 如果 onRejected 不是函数且 promise1 拒绝执行， promise2 必须拒绝执行并返回相同的拒绝原因
+              reject(this.reason);
+            } else {
+              let x = onRejected(this.reason);
+              resolvePromise(x, promise2, resolve, reject);
+            }
           } catch (e) {
             reject(e);
           }
-        }, 0);
+        });
       }
       if (this.status === STATUS.PENDING) {
+        // pending 状态保存的 onFulfilled() 和 onRejected() 回调也要符合 2.2.7.1，2.2.7.2，2.2.7.3 和 2.2.7.4 规范
         this.onResolveCallbacks.push(() => {
           setTimeout(() => {
             try {
-              let x = onFulfilled(this.value);
-              reslovePromise(x, promsie2, resolve, reject);
+              if (typeof onFulfilled !== "function") {
+                resolve(this.value);
+              } else {
+                let x = onFulfilled(this.value);
+                resolvePromise(x, promise2, resolve, reject);
+              }
             } catch (e) {
               reject(e);
             }
-          }, 0);
+          });
         });
         this.onRejectCallbacks.push(() => {
           setTimeout(() => {
             try {
-              let x = onRejected(this.reason);
-              reslovePromise(x, promsie2, resolve, reject);
+              if (typeof onRejected !== "function") {
+                reject(this.reason);
+              } else {
+                let x = onRejected(this.reason);
+                resolvePromise(x, promise2, resolve, reject);
+              }
             } catch (e) {
               reject(e);
             }
-          }, 0);
+          });
         });
       }
     });
-    return promsie2;
+    return promise2;
+  }
+}
+
+/**
+ * 对resolve()、reject() 进行改造增强 针对resolve()和reject()中不同值情况 进行处理
+ * @param  {promise} promise2 promise1.then方法返回的新的promise对象
+ * @param  {[type]} x         promise1中onFulfilled或onRejected的返回值
+ * @param  {[type]} resolve   promise2的resolve方法
+ * @param  {[type]} reject    promise2的reject方法
+ */
+function resolvePromise(x, promise2, resolve, reject) {
+  // 2.3.1规范 如果 promise 和 x 指向同一对象，以 TypeError 为据因拒绝执行 promise
+  if (x === promise2) {
+    // 如果promise2 === x，会导致循环引用，自己等自己执行完成
+    throw new TypeError("出错了");
+  }
+
+  if (x !== null && (typeof x === "object" || typeof x === "function")) {
+    // 2.3.3 如果 x 为对象或函数
+    try {
+      // 2.3.3.1 把 x.then 赋值给 then
+      var then = x.then;
+    } catch (e) {
+      // 2.3.3.2 如果取 x.then 的值时抛出错误 e ，则以 e 为据因拒绝 promise
+      return reject(e);
+    }
+
+    /**
+     * 2.3.3.3
+     * 如果 then 是函数，将 x 作为函数的作用域 this 调用。
+     * 传递两个回调函数作为参数，
+     * 第一个参数叫做 `resolvePromise` ，第二个参数叫做 `rejectPromise`
+     */
+    if (typeof then === "function") {
+      // 2.3.3.3.3 如果 resolvePromise 和 rejectPromise 均被调用，或者被同一参数调用了多次，则优先采用首次调用并忽略剩下的调用
+      let called = false; // 避免多次调用
+      try {
+        // 防止取多次
+        then.call(
+          x,
+          // 2.3.3.3.1 如果 resolvePromise 以值 y 为参数被调用，则运行 [[Resolve]](promise, y)
+          (y) => {
+            if (called) return;
+            called = true;
+            // 递归解析成功后的值，知道他是一个普通值为止
+            resolvePromise(y, promise2, resolve, reject);
+          },
+          // 2.3.3.3.2 如果 rejectPromise 以据因 r 为参数被调用，则以据因 r 拒绝 promise
+          (r) => {
+            if (called) return;
+            called = true;
+            reject(r);
+          }
+        );
+      } catch (e) {
+        /**
+         * 2.3.3.3.4 如果调用 then 方法抛出了异常 e
+         * 2.3.3.3.4.1 如果 resolvePromise 或 rejectPromise 已经被调用，则忽略之
+         */
+        if (called) return;
+        called = true;
+
+        // 2.3.3.3.4.2 否则以 e 为据因拒绝 promise
+        reject(e);
+      }
+    } else {
+      // 2.3.3.4 如果 then 不是函数，以 x 为参数执行 promise
+      resolve(x);
+    }
+  } else {
+    // 2.3.4 如果 x 不为对象或者函数，以 x 为参数执行 promise
+    return resolve(x);
   }
 }
 ```
@@ -516,11 +605,11 @@ class Promise {
         // 看onFulfilled是不是函数，是：就是传参了就直接用onFulfilled，不是：就给他补充上去成功的回调
         typeof onFulfilled === 'function' ? onFulfilled : data => data
         typeof onRejected === 'function' ? onRejected : err => {throw err}
-        let promise2 = new Promsie((resolve, reject) => {
+        let promise2 = new Promise((resolve, reject) => {
             if (this.status === STATUS.FULFILLED) {
                 setTimeout(()=> {
                     try{
-                        let x = onFufilled(this.value)
+                        let x = onFulfilled(this.value)
                         resolvePromise(x, promise2, resolve, reject)
                     } catch (e) {
                         reject(e)
@@ -541,7 +630,7 @@ class Promise {
                 setTimeout(()=> {
                     this.onResolveCallbacks.push(()=>{
                         try{
-                            let x = onFufilled(this.value)
+                            let x = onFulfilled(this.value)
                             resolvePromise(x, promise2, resolve, reject)
                         } catch (e) {
                             reject(e)
@@ -563,26 +652,31 @@ class Promise {
         return promise2
     }
 }
+
 // promise测试时调用此方法
-Promise.defer = Promsie.deffered = function () {
-    let dfd = {}
-    dfd.promise = new Promise((resolve, reject) => {
-        dfd.resolve = resolve
-        dfd.reject = reject
-    })
-    // 测试是看dfd上的promise实例，resolve，reject方法是否符合规范
-    return dfd
-}
+Promise.deferred = function () {
+  let result = {};
+  result.promise = new Promise((resolve, reject) => {
+    result.resolve = resolve;
+    result.reject = reject;
+  });
+  return result;
+};
+
 module.exports = Promise
 ```
 
 ### Promise.resolve
+
 Promise.resolve()是一个静态方法：（类直接调用）
+
 - 可以理解为，一个帮我们创建成功的 Promise。
 - Promise.resolve()，可以等待一个 promise 执行完成。
 
 ### Promise.reject
+
 Promise.reject()是一个静态方法：直接报错。
+
 ```js
 let p = new Promise((resolve, reject) => {
   setTimeout(() => {
