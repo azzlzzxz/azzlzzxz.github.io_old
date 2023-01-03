@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-06-29 15:51:52
  * @LastEditors: xinxu
- * @LastEditTime: 2023-01-03 17:20:22
+ * @LastEditTime: 2023-01-03 17:37:44
  * @FilePath: /azzlzzxz.github.io/docs/.vuepress/config.ts
  */
 import { defineUserConfig } from "vuepress";
@@ -18,12 +18,16 @@ export default defineUserConfig({
     logo: "/logo.png",
     navbar: [
       {
+        text: "前端基础知识",
+        link: "/base/promise/promise.md",
+      },
+      {
         text: "Vue",
         link: "/vue/vue3源码.md",
       },
       {
         text: "React",
-        link: "/react/hook.md",
+        link: "/react/hooks/hook.md",
       },
       {
         text: "TS",
@@ -53,6 +57,13 @@ export default defineUserConfig({
           text: "浏览器",
           collapsible: true,
           children: ["/base/browser/browser.md"],
+        },
+      ],
+      "/react/": [
+        {
+          text: "Hook系列",
+          collapsible: true,
+          children: ["/react/hooks/hook.md"],
         },
       ],
       "/node/": [
