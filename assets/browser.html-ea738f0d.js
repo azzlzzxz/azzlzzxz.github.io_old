@@ -1,1 +1,0 @@
-const e=JSON.parse('{"key":"v-c41af446","path":"/base/browser/browser.html","title":"浏览器基础知识","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1672737913000,"contributors":[{"name":"xinxu","email":"azzlzzxz@gmail.com","commits":1}]},"filePathRelative":"base/browser/browser.md"}');export{e as data};

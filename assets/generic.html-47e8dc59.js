@@ -1,0 +1,1 @@
+const t=JSON.parse('{"key":"v-ff9520da","path":"/typescript/generic.html","title":"泛型","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1672738783000,"contributors":[{"name":"xinxu","email":"azzlzzxz@gmail.com","commits":1}]},"filePathRelative":"typescript/generic.md"}');export{t as data};

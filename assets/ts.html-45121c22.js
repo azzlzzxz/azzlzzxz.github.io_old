@@ -1,0 +1,1 @@
+const t=JSON.parse('{"key":"v-068c64e9","path":"/typescript/ts.html","title":"了解TypeScript","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1672738783000,"contributors":[{"name":"xinxu","email":"azzlzzxz@gmail.com","commits":1}]},"filePathRelative":"typescript/ts.md"}');export{t as data};
