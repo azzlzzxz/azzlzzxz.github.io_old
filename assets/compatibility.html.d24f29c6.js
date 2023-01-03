@@ -1,0 +1,1 @@
+const t=JSON.parse('{"key":"v-41c63a4c","path":"/typescript/compatibility.html","title":"TS \u7684\u517C\u5BB9\u6027","lang":"zh-CN","frontmatter":{},"excerpt":"","headers":[],"git":{"updatedTime":1672733469000,"contributors":[{"name":"xinxu","email":"azzlzzxz@gmail.com","commits":1}]},"filePathRelative":"typescript/compatibility.md"}');export{t as data};
