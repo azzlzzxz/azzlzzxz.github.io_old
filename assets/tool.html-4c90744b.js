@@ -1,0 +1,1 @@
+const t=JSON.parse('{"key":"v-66ee01b0","path":"/typescript/tool.html","title":"工具类型","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1672737913000,"contributors":[{"name":"xinxu","email":"azzlzzxz@gmail.com","commits":1}]},"filePathRelative":"typescript/tool.md"}');export{t as data};
