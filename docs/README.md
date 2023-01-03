@@ -1,11 +1,11 @@
 ---
 home: true
 heroImage: /logo.png
-heroText: Steins Gate的前端记录
+heroText: Steins Gate 的前端记录
 tagline: 一点一滴都是进步
 actions:
   - text: 前端知识
-    link: /promise/promise.md
+    link: /base/promise/promise.md
     type: primary
 features:
   - title: 学习记录

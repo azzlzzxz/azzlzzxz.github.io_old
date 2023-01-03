@@ -1,4 +1,4 @@
-# 模块加载机制被称为 CommonJS 规范
+# CommonJS 规范
 
 ## 1.概述
 

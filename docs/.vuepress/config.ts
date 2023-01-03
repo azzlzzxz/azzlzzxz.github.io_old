@@ -2,11 +2,11 @@
  * @Author: xinxu
  * @Date: 2022-06-29 15:51:52
  * @LastEditors: xinxu
- * @LastEditTime: 2023-01-03 15:51:05
+ * @LastEditTime: 2023-01-03 17:20:22
  * @FilePath: /azzlzzxz.github.io/docs/.vuepress/config.ts
  */
 import { defineUserConfig } from "vuepress";
-const { defaultTheme } = require("@vuepress/theme-default");
+import { defaultTheme } from "vuepress";
 // const { searchPlugin } = require("@vuepress/plugin-search");
 
 export default defineUserConfig({
@@ -18,13 +18,12 @@ export default defineUserConfig({
     logo: "/logo.png",
     navbar: [
       {
-        text: "前端框架",
-        children: [
-          {
-            text: "vue",
-            children: ["/vue/vue3源码.md"],
-          },
-        ],
+        text: "Vue",
+        link: "/vue/vue3源码.md",
+      },
+      {
+        text: "React",
+        link: "/react/hook.md",
       },
       {
         text: "TS",
@@ -40,28 +39,33 @@ export default defineUserConfig({
       },
     ],
     sidebar: {
-      "/promise/": [
+      "/base/": [
         {
           text: "Promise",
-          collapsable: true,
+          collapsible: true,
           children: [
-            "/promise/promise.md",
-            "/promise/promise方法.md",
-            "/promise/generator.md",
+            "/base/promise/promise.md",
+            "/base/promise/promise方法.md",
+            "/base/promise/generator.md",
           ],
+        },
+        {
+          text: "浏览器",
+          collapsible: true,
+          children: ["/base/browser/browser.md"],
         },
       ],
       "/node/": [
         {
           text: "Node",
-          collapsable: true,
+          collapsible: true,
           children: ["/node/commonJs.md"],
         },
       ],
       "/typescript/": [
         {
           text: "TS",
-          collapsable: true,
+          collapsible: true,
           children: [
             "/typescript/ts.md",
             "/typescript/type.md",
