@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-06-29 15:51:52
  * @LastEditors: xinxu
- * @LastEditTime: 2022-08-24 09:53:47
+ * @LastEditTime: 2023-01-03 15:51:05
  * @FilePath: /azzlzzxz.github.io/docs/.vuepress/config.ts
  */
 import { defineUserConfig } from "vuepress";
@@ -27,9 +27,6 @@ export default defineUserConfig({
         ],
       },
       {
-        text: "构建工具",
-      },
-      {
         text: "TS",
         link: "/typescript/ts.md",
       },
@@ -46,7 +43,7 @@ export default defineUserConfig({
       "/promise/": [
         {
           text: "Promise",
-          collapsible: true,
+          collapsable: true,
           children: [
             "/promise/promise.md",
             "/promise/promise方法.md",
@@ -57,13 +54,14 @@ export default defineUserConfig({
       "/node/": [
         {
           text: "Node",
-          collapsible: true,
+          collapsable: true,
           children: ["/node/commonJs.md"],
         },
       ],
       "/typescript/": [
         {
           text: "TS",
+          collapsable: true,
           children: [
             "/typescript/ts.md",
             "/typescript/type.md",

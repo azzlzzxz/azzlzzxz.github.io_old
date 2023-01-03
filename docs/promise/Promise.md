@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-07-01 17:36:28
  * @LastEditors: xinxu
- * @LastEditTime: 2022-12-30 15:28:32
+ * @LastEditTime: 2023-01-03 14:55:36
  * @FilePath: /azzlzzxz.github.io/docs/promise/Promise.md
 -->
 
