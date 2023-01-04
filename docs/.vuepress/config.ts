@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-06-29 15:51:52
  * @LastEditors: xinxu
- * @LastEditTime: 2023-01-04 10:52:36
+ * @LastEditTime: 2023-01-04 14:53:49
  * @FilePath: /azzlzzxz.github.io/docs/.vuepress/config.ts
  */
 import { defineUserConfig } from "vuepress";
@@ -54,7 +54,7 @@ export default defineUserConfig({
           ],
         },
         {
-          text: "浏览器",
+          text: "浏览器基础知识",
           collapsible: true,
           children: ["/base/browser/browser.md"],
         },
