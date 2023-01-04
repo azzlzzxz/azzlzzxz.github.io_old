@@ -1,1 +1,0 @@
-const e=JSON.parse('{"key":"v-58377bbf","path":"/base/promise/generator.html","title":"generator 与 async await","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1672738783000,"contributors":[{"name":"xinxu","email":"azzlzzxz@gmail.com","commits":1}]},"filePathRelative":"base/promise/generator.md"}');export{e as data};

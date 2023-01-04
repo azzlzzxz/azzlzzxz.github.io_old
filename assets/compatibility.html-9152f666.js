@@ -1,0 +1,1 @@
+const t=JSON.parse('{"key":"v-41c63a4c","path":"/typescript/compatibility.html","title":"TS 的兼容性","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1672802631000,"contributors":[{"name":"xinxu","email":"azzlzzxz@gmail.com","commits":1}]},"filePathRelative":"typescript/compatibility.md"}');export{t as data};
