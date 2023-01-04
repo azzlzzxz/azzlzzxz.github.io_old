@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-72cd1b2f","path":"/base/browser/evenloop.html","title":"浏览器事件循环机制","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1672819094000,"contributors":[{"name":"xinxu","email":"azzlzzxz@gmail.com","commits":1}]},"filePathRelative":"base/browser/evenloop.md"}');export{e as data};

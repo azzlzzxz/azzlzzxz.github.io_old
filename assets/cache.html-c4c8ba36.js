@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-6cd384c3","path":"/base/browser/cache.html","title":"浏览器缓存机制","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1672819094000,"contributors":[{"name":"xinxu","email":"azzlzzxz@gmail.com","commits":1}]},"filePathRelative":"base/browser/cache.md"}');export{e as data};

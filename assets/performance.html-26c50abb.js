@@ -1,0 +1,1 @@
+const e=JSON.parse('{"key":"v-58350fd5","path":"/base/browser/performance.html","title":"浏览器性能优化","lang":"zh-CN","frontmatter":{},"headers":[],"git":{"updatedTime":1672819094000,"contributors":[{"name":"xinxu","email":"azzlzzxz@gmail.com","commits":1}]},"filePathRelative":"base/browser/performance.md"}');export{e as data};
