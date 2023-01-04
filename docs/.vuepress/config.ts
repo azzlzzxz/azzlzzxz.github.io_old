@@ -2,7 +2,7 @@
  * @Author: xinxu
  * @Date: 2022-06-29 15:51:52
  * @LastEditors: xinxu
- * @LastEditTime: 2023-01-03 17:37:44
+ * @LastEditTime: 2023-01-04 10:52:36
  * @FilePath: /azzlzzxz.github.io/docs/.vuepress/config.ts
  */
 import { defineUserConfig } from "vuepress";
@@ -27,7 +27,7 @@ export default defineUserConfig({
       },
       {
         text: "React",
-        link: "/react/hooks/hook.md",
+        link: "/react/hooks/useMemo.md",
       },
       {
         text: "TS",
@@ -61,9 +61,9 @@ export default defineUserConfig({
       ],
       "/react/": [
         {
-          text: "Hook系列",
+          text: "Hooks系列",
           collapsible: true,
-          children: ["/react/hooks/hook.md"],
+          children: ["/react/hooks/useMemo.md"],
         },
       ],
       "/node/": [
