@@ -21,6 +21,7 @@ export default defineUserConfig({
         text: "前端基础知识",
         link: "/base/promise/promise.md",
       },
+
       {
         text: "Vue",
         link: "/vue/vue3源码.md",
@@ -36,6 +37,10 @@ export default defineUserConfig({
       {
         text: "Node",
         link: "/node/commonJS.md",
+      },
+      {
+        text: "其他",
+        children: [],
       },
       {
         text: "主页",
@@ -70,7 +75,17 @@ export default defineUserConfig({
         {
           text: "Node",
           collapsible: true,
-          children: ["/node/commonJs.md"],
+          children: ["/node/commonJs.md", "/node/stream.md"],
+        },
+        {
+          text: "NPM",
+          collapsible: true,
+          children: ["/node/npm/source.md"],
+        },
+        {
+          text: "Nest",
+          collapsible: true,
+          children: ["/node/nest/base.md"],
         },
       ],
       "/typescript/": [
