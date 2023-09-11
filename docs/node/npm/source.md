@@ -401,3 +401,80 @@ npm ci 命令可以完全安装 lock 文件描述的依赖树来安装依赖，�
 **npm ci** 和 **npm i** 不仅仅是是否使用 package-lock.json 的区别，npm ci 会删除 node_modules 中所有的内容并且毫无二心的按照 package-lock.json 的结构来安装和保存包，他的目的是为了保证任何情况下产生的 node_modules 结构都一致的。而 npm i 不会删除 node_modules（如果 node_modules 已经存在某个包就不会重新下载了）、并且安装过程中可能还会调整并修改 package-lock.json 的内容
 
 > 实际项目中建议将 lock 也添加到 git 中，尽量使用 npm ci 来安装依赖，如果有依赖需要修改的，可以通过 npm install xxx@xxx 来安装指定依赖的指定版本，这样只会调整 lock 文件中指定依赖的依赖树，不会修改其他依赖的依赖树。
+
+## npm 存在的问题
+
+### 依赖结构不确定
+
+假如项目依赖两个包 a 和 b，这两个包的依赖又是这样的:
+
+![depend_one](../../.vuepress/public/images/depend_one.png)
+
+那么 npm install 的时候，通过扁平化处理之后，究竟是这样:
+
+![depend_second](../../.vuepress/public/images/depend_second.png)
+
+还是这样:
+
+![depend_three](../../.vuepress/public/images/depend_three.png)
+
+答案是: 都有可能。取决于 a 和 b 在 package.json 中的位置，如果 a 声明在前面，那么就是前面的结构，否则是后面的结构。
+这就是为什么会产生依赖结构的不确定问题，也是 lock 文件诞生的原因之一，无论是 package-lock.json(npm 5.x 才出现)还是 yarn.lock，都是为了保证 install 之后都产生确定的 node_modules 结构。
+
+### 扁平化导致可以非法访问没有声明过依赖的包（幽灵依赖）
+
+“幽灵依赖” 指的是项目代码中使用了一些没有被定义在其 package.json 文件中的包。
+
+考虑下面的例子：
+
+```json
+// package.json
+{
+  "name": "demo",
+  "main": "index.js",
+  "dependencies": {
+    "minimatch": "^3.0.4"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.2"
+  }
+}
+```
+
+但假设代码是这样：
+
+```json
+// index.js
+var minimatch = require("minimatch")
+var expand = require("brace-expansion");  // ???
+var glob = require("glob")  // ???
+
+// （更多使用那些库的代码)
+```
+
+有两个库根本没有被作为依赖定义在 package.json 文件中。那这到底是怎么跑起来的呢？
+原来 brace-expansion 是 minimatch 的依赖，而 glob 是 rimraf 的依赖。在安装的时候，NPM 会打平他们的文件夹到 node_modules。NodeJS 的 require() 函数能够在依赖目录找到它们，因为 require() 在查找文件夹时 根本不会受 package.json 文件 影响。
+
+这是很不安全的，当未来 minimatch 中不再依赖 brace-expansion 时将会导致项目报错，因为那时整个项目可能没有如何包依赖了 brace-expansion，也就不会在顶层依赖树中有 brace-expansion，所以项目一定会因为找不到 brace-expansion 这个包而报错。
+
+### 又慢又大
+
+#### 分析依赖树
+
+npm 在分析依赖树的时候会先并行发出项目顶级的依赖解析请求，当某一个请求回来时，在去请求起所有的子依赖，直到不存在依赖为止，由于每一个树都需要根节点的依赖解析请求后才能开始解析其子树，如果依赖树深度比较深就会导致等待时间过长
+
+![deped_four](../../.vuepress/public/images/depend_four.jpg)
+
+递归的分析依赖树需要非常大量的 http 请求，这也会导致依赖树构建时间过长
+
+这里推荐一个分析依赖树的工具 npm-remote-ls
+
+可视化依赖关系：[npm.anvaka](https://npm.anvaka.com/#/)
+
+#### 大量文件下载/解压
+
+因为 npm 下载的内容是一个个压缩包，解压后文件数量多，需要大量的 IO 操作（创建文件夹、创建文件、写入文件...），这也是导致 npm 慢的主要原因。
+
+#### 依然可能存在大量重复包
+
+扁平化只能会在首次遇到一个包时才会将其提升到顶部，如果项目中有 A、B、C 三个包分别依赖了D@1.0.0、D@2.0.0、D@2.0.0，那么可能会产生D@1.0.0被提升，D@2.0.0出现在 B、C 的 node_modelus 的情况。
