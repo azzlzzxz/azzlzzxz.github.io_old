@@ -10,6 +10,7 @@ import { defaultTheme } from "vuepress";
 // const { searchPlugin } = require("@vuepress/plugin-search");
 
 export default defineUserConfig({
+  dest: "dist",
   lang: "zh-CN",
   title: "Steins Gate",
   description: "Steins Gate的前端记录",
