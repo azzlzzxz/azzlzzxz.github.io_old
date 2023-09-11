@@ -16,3 +16,5 @@ pnpm - performant npm，在 2017 年正式发布，定义为快速的，节省�
 因此，您在磁盘上节省了大量空间，这与项目和依赖项的数量成正比，并且安装速度要快得多！
 
 ![pnpm_one](../../.vuepress/public/images/pnpm_one.jpg)
+
+## 硬链接
