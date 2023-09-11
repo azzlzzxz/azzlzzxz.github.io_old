@@ -408,6 +408,52 @@ npm ci 命令可以完全安装 lock 文件描述的依赖树来安装依赖，�
 
 > 实际项目中建议将 lock 也添加到 git 中，尽量使用 npm ci 来安装依赖，如果有依赖需要修改的，可以通过 npm install xxx@xxx 来安装指定依赖的指定版本，这样只会调整 lock 文件中指定依赖的依赖树，不会修改其他依赖的依赖树。
 
+### npm cache clean –force
+
+是强制清除~/.npm 目录下的压缩包（清除缓存）
+
+## package-lock.json
+
+背景
+
+npm 使用 semver 版本控制，方便开发者使用特定的版本跟踪策略，比如：自动更新一些版本（bug 修复等）
+但是 npm semver 版本控制策略可能导致一些问题：
+
+1. 团队内不同的队友（teammates）可能实际上依赖的版本并不一致
+2. 本地开发环境或者其他环境阶段安装的依赖不一致
+3. 这些运行时环境不一致的问题，最终可能导致本地或者测试环境能够正常运行的代码，在生产环境中却产生了异常。
+
+为了达到不同成员、不同环境的依赖保持一致的效果，采用了 package-lock.json 来锁定特定的版本。
+
+package-lock.json 组成
+
+```json
+{
+  "name": "assets-system", //和package.json中name保持一致
+  "version": "0.1.0", // 和package.json中name保持一致
+  "lockfileVersion": 1,
+  "requires": true,
+  "packages": {},
+  "dependencies": [] //当前包的依赖锁定依赖树
+}
+```
+
+部分字段说明：
+
+```json
+"react": {
+  "version": "18.2.0",
+  "resolved": "http://nexus.fenxianglife.com/repository/npm-public/react/-/react-18.2.0.tgz",
+  "integrity": "sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==",
+  "requires": {
+    "loose-envify": "^1.1.0"
+  }
+},
+```
+
+1. resolved：依赖包的下载地址，对应使用 npm registry 安装的依赖。
+2. integrity：是用来验证资源的完整性，即是否是我期望加载的资源，而不是被别人篡改了内容。
+
 ## npm 存在的问题
 
 ### 依赖结构不确定
