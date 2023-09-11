@@ -18,3 +18,5 @@ pnpm - performant npm，在 2017 年正式发布，定义为快速的，节省�
 ![pnpm_one](../../.vuepress/public/images/pnpm_one.jpg)
 
 ## 硬链接
+
+## 软连接
