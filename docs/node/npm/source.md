@@ -263,6 +263,141 @@ console.log('Hello NPM')
 当运行 npx hello 时自然就相当于运行了 @yuexi111/hello_shell/bin/index.js
 
 - 当我们使用 npm install 安装包时，会将这个包中 package.json 中 bin 中指定的脚本软链接到项目的 node_modules/.bin 下，key 作为链接名字（也就是命令），value 作为命令运行时执行的文件
+
 - 当我们通过 npm run xxx 运行某个脚本时，会执行 package.json 中 scripts 中指定的脚步后的命令，会先去 node_modules/.bin 中查找这些命令，然后去 ../node_modules/.bin,...全都找不到才会去环境变量中查找。
 
 ### npm install
+
+假如我们从 github 上 conle 了一个项目，他的 package.json 是这样的：
+
+```json
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@azzlzzxz/form": "^1.0.4",
+    "@azzlzzxz/table": "^1.0.1"
+  }
+}
+```
+
+当我们去运行 npm install 的时候，会经过一下几步:
+
+#### 执行工程自身 preinstall 钩子
+
+npm 跟 git 一样都有完善的钩子机制散布在 npm 运行的各个阶段，当前 npm 工程如果定义了 preinstall 钩子此时会在执行 npm install 命令之前被执行。
+
+```json
+// 如何定义钩子：直接在 scripts 中定义即可
+// package.json
+{
+  // ...
+  "scripts": {
+    "preinstall": "echo \"preinstall hook\"",
+    "install": "echo \"install hook\"",
+    "postinstall": "echo \"postinstall hook\""
+    // ...
+  }
+  // ...
+}
+```
+
+常用的 npm hooks 包括：
+
+1.  preinstall：在安装依赖前执行的脚本
+2.  postinstall：在安装依赖后执行的脚本
+3.  prestart：在启动应用前执行的脚本
+4.  poststart：在启动应用后执行的脚本
+5.  pretest：在执行测试前执行的脚本
+6.  posttest：在执行测试后执行的脚本
+7.  prebuild：在打包前执行的脚本
+8.  postbuild：在打包后执行的脚本
+9.  prepublish：在发布前执行的脚本
+10. postpublish：在发布后执行的脚本
+
+#### 获取 package.json 中依赖数据构建依赖树
+
+首先需要做的是确定工程中的首层依赖，也就是 dependencies 和 devDependencies 属性中直接指定的模块（假设此时没有添加 npm install 的其他参数）。
+
+> 工程本身是整棵依赖树的根节点，每个首层依赖模块都是根节点下面的一棵子树，npm 会开启多进程从每个首层依赖模块开始逐步寻找更深层级的节点。
+
+确定完首层依赖后，就开始获取各个依赖的模块信息，获取模块信息是一个递归的过程，分为以下几步：
+
+1. 获取模块信息。在下载一个模块之前，首先要确定其版本，这是因为 package.json 中往往是 semantic version（semver，语义化版本）。此时如果版本描述文件（npm-shrinkwrap.json 或 package-lock.json）中有该模块信息直接拿即可，如果没有则从仓库获取。如 packaeg.json 中某个包的版本是 ^1.1.0，npm 就会去仓库中获取符合 1.x.x 形式的最新版本。
+
+2. 获取模块实体。上一步会获取到模块的压缩包地址（resolved 字段），npm 会用此地址检查本地缓存，缓存中有就直接拿，如果没有则从仓库下载。
+
+3. 查找该模块依赖，如果有依赖则回到第 1 步，如果没有则停止。
+
+最终会得到一个类似下图中的依赖树:
+![npm](../../.vuepress/public/images/npm.png)
+
+> 如果项目中存在 npm 的 lock 文件（例如 package-lock.json），则不会从头开始构建依赖树，而是对 lock 中依赖树中存储冲突的依赖进行调整即可
+
+#### 依赖树扁平化（dedupe）
+
+上一步获取到的是一棵完整的依赖树，其中可能包含大量重复模块。比如 form 模块依赖于 antd, table 模块同样依赖于 antd。在 npm3 以前会严格按照依赖树的结构进行安装，也就是方便在 form 和 table 的 node_modules 中各安装一份，因此会造成模块冗余。
+
+​ 从 npm3 开始默认加入了一个 dedupe 的过程。它会遍历所有节点，逐个将模块放在根节点下面，也就是 node_modules 的第一层。当发现有重复模块时，则将其丢弃。
+
+经过优化后的依赖树就是变成了下面这样:
+![npm_opt](../../.vuepress/public/images/npm_opt.png)
+
+> 而 lock 文件中存储的正是这颗被优化后的依赖树。
+
+这里需要对重复模块进行一个定义，它指的是模块名相同且 semver(语义化版本) 兼容。每个 semver 都对应一段版本允许范围，如果两个模块的版本允许范围存在交集，那么就可以得到一个兼容版本，而不必版本号完全一致，这可以使更多冗余模块在 dedupe 过程中被去掉。
+
+比如 node_modules 下 form 模块依赖 antd@^4.0.0，tale 模块依赖 antd@^4.1.0，则 >=4.1.0 的版本都为兼容版本。
+
+而当 foo 依赖 antd@^5.0.0，bar 依赖 antd@^4.1.0，则依据 semver 的规则，二者不存在兼容版本。会将一个版本放在首层依赖中，另一个仍保留在其父项（foo 或者 bar）的依赖树里。
+
+举个栗子 🌰，假设一个依赖树原本是这样:
+
+```lua
+node_modules
+|--form
+   |-- antd@version1
+|--table
+   |-- antd@version2
+```
+
+假设 version1 和 version2 是兼容版本，则经过 dedupe 会成为下面的形式：
+
+```lua
+node_modules
+|--form
+|--table
+|--antd（保留的版本为兼容版本）
+```
+
+假设 version1 和 version2 为非兼容版本，则后面的版本保留在依赖树中：
+
+```lua
+node_modules
+|--form
+|--antd@version1
+|--table
+   |-- antd@version2
+```
+
+#### 安装模块
+
+这一步将会按照依赖树下载/解压包，并更新工程中的 node_modules。
+
+![update_node_modules](../../.vuepress/public/images/update_node_modules.jpg)
+
+### npm ci
+
+npm ci 命令可以完全安装 lock 文件描述的依赖树来安装依赖，可以用它来避免扁平化造成的 node_modules 结构不确定的问题。
+
+**npm ci** 和 **npm i** 不仅仅是是否使用 package-lock.json 的区别，npm ci 会删除 node_modules 中所有的内容并且毫无二心的按照 package-lock.json 的结构来安装和保存包，他的目的是为了保证任何情况下产生的 node_modules 结构都一致的。而 npm i 不会删除 node_modules（如果 node_modules 已经存在某个包就不会重新下载了）、并且安装过程中可能还会调整并修改 package-lock.json 的内容
+
+> 实际项目中建议将 lock 也添加到 git 中，尽量使用 npm ci 来安装依赖，如果有依赖需要修改的，可以通过 npm install xxx@xxx 来安装指定依赖的指定版本，这样只会调整 lock 文件中指定依赖的依赖树，不会修改其他依赖的依赖树。
