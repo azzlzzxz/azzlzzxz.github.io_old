@@ -52,6 +52,12 @@ package.json
 }
 ```
 
+- dependencies： 生产环境需要的依赖（-P/--save-prod）。
+- devDependencies：工程只有开发环境需要，生产环境不需要的依赖（-D/--save-dev）。
+- optionalDependencies：依赖是可选的，它们只有在运行时需要使用某些功能时才会被引入（-O/--save-optional）。
+- peerDependencies：工程需要和这个依赖配套使用，一般用于解决插件依赖的核心库的版本和主项目依赖的核心库的版本不一致的问题，常见于开发配套插件。
+- bundledDependencies：工程依赖于某些特定的依赖项，并且希望在运行时不必再次下载它们，则可以使用该选项（-B/--save-bundle）。
+
 ## 发布一个 npm 包(公共)
 
 1. 首先需要到 [npm 官网](https://www.npmjs.com/) 注册一个 npm 账号。
