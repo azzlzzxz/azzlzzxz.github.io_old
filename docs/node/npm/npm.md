@@ -4,15 +4,13 @@
 
 1. 镜像查询可以使用 nrm
 
-全局安装 nrm：
-
-```shell
+```sh
+ # 全局安装 nrm
 npm install nrm -g
 ```
 
-使用 nrm 查询镜像地址
-
-```shell
+```sh
+# 使用 nrm 查询镜像地址
 nrm ls
 ```
 
@@ -27,9 +25,12 @@ nrm ls
 
 2. 镜像获取/修改
 
-```shell
-npm config get registry 检查源是否切换成功
+```sh
+# 切换源
 npm set registry https://registry.npmjs.org/
+
+# 检查源是否切换成功
+npm config get registry
 ```
 
 ## npx
@@ -44,6 +45,34 @@ npx 和 npm 区别：
 
 3. npx 可以避免全局安装的包版本冲突问题，因为它会优先使用本地的包。npm 需要全局安装，容易出现版本冲突问题。
 
-```shell
+```sh
 npx create-react-app my-app
+```
+
+## 查看已安装的依赖包
+
+```sh
+# 当前项目
+npm list --depth 0
+
+# 全局
+npm list -g --depth 0
+```
+
+## 查看依赖包的安装路径
+
+```sh
+# 当前项目
+npm root
+
+# 全局
+npm root -g
+```
+
+## 清除缓存
+
+```sh
+npm cache clean -f
+# OR
+yarn cache clean
 ```
