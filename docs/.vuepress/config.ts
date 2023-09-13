@@ -81,7 +81,11 @@ export default defineUserConfig({
         {
           text: "NPM",
           collapsible: true,
-          children: ["/node/npm/source.md", "/node/npm/pnpm.md"],
+          children: [
+            "/node/npm/source.md",
+            "/node/npm/npm.md",
+            "/node/npm/pnpm.md",
+          ],
         },
         {
           text: "Nest",

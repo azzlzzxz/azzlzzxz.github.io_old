@@ -45,7 +45,11 @@ pnpm - performant npm，在 2017 年正式发布，定义为快速的，节省�
 
 ## pnpm 原理
 
-pnpm 的 node_modules 布局使用符号链接来创建依赖项的嵌套结构。
+pnpm 引入了另一套依赖管理策略：内容寻址存储。
+
+该策略会将包安装在系统的全局 store 中，依赖的每个版本只会在系统中安装一次。
+
+在引用项目 node_modules 的依赖时，会通过硬链接与符号链接在全局 store 中找到这个文件。
 
 node_modules 中每个包的每个文件都是来自内容可寻址存储的硬链接。 假设您安装了依赖于 bar@1.0.0 的 foo@1.0.0。 pnpm 会将两个包硬链接到 node_modules 如下所示：
 
@@ -128,7 +132,7 @@ node_modules
             └── qar -> <store>/qar
 ```
 
-如你所见，即使图形现在更深（foo > bar > qar），但目录深度仍然相同。
+<font color="#E9EBFE">如你所见，即使图形现在更深（foo > bar > qar），但目录深度仍然相同。</font>
 
 这种布局乍一看可能很奇怪，但它与 Node 的模块解析算法完全兼容！ 解析模块时，Node 会忽略符号链接，因此当 foo@1.0.0/node_modules/foo/index.js 需要 bar 时，Node 不会使用在 foo@1.0.0/node_modules/bar 的 bar，相反，bar 是被解析到其实际位置（bar@1.0.0/node_modules/bar）。 因此，bar 也可以解析其在 bar@1.0.0/node_modules 中的依赖项。
 
