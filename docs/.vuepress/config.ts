@@ -67,9 +67,19 @@ export default defineUserConfig({
       ],
       "/react/": [
         {
+          text: "react",
+          collapsible: true,
+          children: ["/react/base/jsx.md", "/react/base/virtualDOM.md"],
+        },
+        {
           text: "Hooks系列",
           collapsible: true,
           children: ["/react/hooks/useMemo.md"],
+        },
+        {
+          text: "源码",
+          collapsible: true,
+          children: ["/react/source/fiber.md"],
         },
       ],
       "/node/": [
