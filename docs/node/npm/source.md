@@ -344,7 +344,7 @@ npm 跟 git 一样都有完善的钩子机制散布在 npm 运行的各个阶段
 3. 查找该模块依赖，如果有依赖则回到第 1 步，如果没有则停止。
 
 最终会得到一个类似下图中的依赖树:
-![npm](../../.vuepress/public/images/npm.png)
+![npm](../../.vuepress/public/images/npm.jpg)
 
 > 如果项目中存在 npm 的 lock 文件（例如 package-lock.json），则不会从头开始构建依赖树，而是对 lock 中依赖树中存储冲突的依赖进行调整即可
 
@@ -355,7 +355,7 @@ npm 跟 git 一样都有完善的钩子机制散布在 npm 运行的各个阶段
 ​ 从 npm3 开始默认加入了一个 dedupe 的过程。它会遍历所有节点，逐个将模块放在根节点下面，也就是 node_modules 的第一层。当发现有重复模块时，则将其丢弃。
 
 经过优化后的依赖树就是变成了下面这样:
-![npm_opt](../../.vuepress/public/images/npm_opt.png)
+![npm_opt](../../.vuepress/public/images/npm_opt.jpg)
 
 > 而 lock 文件中存储的正是这颗被优化后的依赖树。
 
@@ -460,7 +460,7 @@ package-lock.json 组成
 
 假如项目依赖两个包 a 和 b，这两个包的依赖又是这样的:
 
-![depend_one](../../.vuepress/public/images/depend_one.png)
+![depend_one](../../.vuepress/public/images/depend_one.jpg)
 
 那么 npm install 的时候，通过扁平化处理之后，究竟是这样:
 
