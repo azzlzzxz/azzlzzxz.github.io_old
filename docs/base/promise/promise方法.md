@@ -1,11 +1,3 @@
-<!--
- * @Author: xinxu
- * @Date: 2022-07-07 20:39:54
- * @LastEditors: xinxu
- * @LastEditTime: 2022-07-14 20:19:07
- * @FilePath: /Blog/docs/promise/promise方法.md
--->
-
 # Promise 方法
 
 ## 1.Promise.all
@@ -166,17 +158,18 @@ obj.readFileAsync("note.md", "utf8").then((data) => {
   console.log(data);
 });
 ```
-```js
-fs.readFile('note.md','utf8',function (params) {})
 
-fs.readFile().then()
+```js
+fs.readFile("note.md", "utf8", function (params) {});
+
+fs.readFile().then();
 
 // 把一些异步的api 转化成了promise的方式  （只针对node写法）
 
 const readFile = promisify(fs.readFile); // 怎么将node的api 转化成promise api
-readFile('note.md','utf8').then(data=>{
-    console.log(data);
-})
+readFile("note.md", "utf8").then((data) => {
+  console.log(data);
+});
 ```
 
 ## 5.abort：Promise 超时处理

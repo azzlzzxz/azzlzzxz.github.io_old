@@ -1,11 +1,3 @@
-<!--
- * @Author: xinxu
- * @Date: 2022-07-12 14:18:48
- * @LastEditors: xinxu
- * @LastEditTime: 2022-07-14 20:33:18
- * @FilePath: /Blog/docs/promise/generator.md
--->
-
 # generator 与 async await
 
 - Promise 中有很多问题，内部还是采用回调的方式，如果逻辑过多还是可能会导致回调地狱。
@@ -106,7 +98,9 @@ co(read())
     console.log(err);
   });
 ```
+
 **async + await = generator + co**
+
 ```js
 const fs = require('fs').promises
 async read () {
@@ -121,8 +115,9 @@ read().then(data => {
     console.log(err)
 })
 ```
-async + await 就是generator的语法糖。
+
+async + await 就是 generator 的语法糖。
 
 **Async / Await 如何通过同步的方式实现异步?**
 <br />
-Async/Await就是一个自执行的generate函数。利用generate函数的特性把异步的代码写成“同步”的形式,第一个请求的返回值作为后面一个请求的参数,其中每一个参数都是一个promise对象。
+Async/Await 就是一个自执行的 generate 函数。利用 generate 函数的特性把异步的代码写成“同步”的形式,第一个请求的返回值作为后面一个请求的参数,其中每一个参数都是一个 promise 对象。
