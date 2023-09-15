@@ -1,16 +1,12 @@
-<!--
- * @Author: xinxu
- * @Date: 2022-07-19 10:42:25
- * @LastEditors: xinxu
- * @LastEditTime: 2022-07-20 11:33:25
- * @FilePath: /azzlzzxz.github.io/docs/typescript/ts.md
--->
-# 了解TypeScript
+# 了解 TypeScript
+
 TypeScript，简称 ts，是微软开发的一种静态的编程语言，它是 JavaScript 的超集。 那么它有什么特别之处呢?
-* 简单来说，js 有的 ts 都有，所有js 代码都可以在 ts 里面运行。
-* ts 支持类型支持，ts = type +JavaScript
-![image](/images/ts.png)
-* tsconfig.json配置
+
+- 简单来说，js 有的 ts 都有，所有 js 代码都可以在 ts 里面运行。
+- ts 支持类型支持，ts = type +JavaScript
+  ![image](/images/ts.png)
+- tsconfig.json 配置
+
 ```json
 {
   "compilerOptions": {
@@ -27,7 +23,7 @@ TypeScript，简称 ts，是微软开发的一种静态的编程语言，它是 
     "noImplicitAny": true, // 不允许隐含any类型
     // esnext 最新版的es
     "lib": ["ESNext", "dom"], // 支持那些库
-    "experimentalDecorators": true, // 让ts支持装饰器  
+    "experimentalDecorators": true, // 让ts支持装饰器
     "downlevelIteration": true,
     "strictFunctionTypes": true,
     "esModuleInterop": true, // 转换es6模块（支持模块之间的转换 ）

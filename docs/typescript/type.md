@@ -1,11 +1,3 @@
-<!--
- * @Author: xinxu
- * @Date: 2022-07-20 11:28:35
- * @LastEditors: xinxu
- * @LastEditTime: 2022-08-17 14:39:51
- * @FilePath: /azzlzzxz.github.io/docs/typescript/type.md
--->
-
 # TS 中的类型
 
 ## 联合类型

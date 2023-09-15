@@ -1,11 +1,3 @@
-<!--
- * @Author: xinxu
- * @Date: 2022-08-17 14:01:05
- * @LastEditors: xinxu
- * @LastEditTime: 2022-08-17 14:35:46
- * @FilePath: /azzlzzxz.github.io/docs/typescript/assertion.md
--->
-
 # 断言
 
 ## 类型断言

@@ -1,11 +1,3 @@
-<!--
- * @Author: xinxu
- * @Date: 2022-08-18 10:57:30
- * @LastEditors: xinxu
- * @LastEditTime: 2022-08-26 10:04:40
- * @FilePath: /azzlzzxz.github.io/docs/typescript/decorator.md
--->
-
 # 装饰器
 
 ## 类装饰器
